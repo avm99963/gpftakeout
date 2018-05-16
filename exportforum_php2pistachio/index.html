@@ -1,0 +1,49 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>{{forum}}</title>
+		<link rel="stylesheet" href="forum.css">
+		<link rel="stylesheet" href="discussions.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	</head>
+	<body>
+		<header>
+      <div id="searchbox">
+      	<a href="index.html"><img src="google.svg"></a>
+      </div>
+      <h1 id="name">{{forum}}</h1>
+		</header>
+		<div id="container">
+			<aside id="left_sidebar">
+	      <ul>
+					<li><b>Lista de hilos</b></li>
+        </ul>
+      </aside>
+			<section class="alone">
+				<div class="breadcrumb">
+					{{forum}}
+        </div>
+				<h2 class="title">Mensajes del Foro</h2>
+				<table>
+					<thead>
+						<tr>
+							<th>Tema</th>
+							<th>Pregunta formulada por</th>
+							<th>Respuestas</th>
+							<th>Última contestación</th>
+						</tr>
+					</thead>
+					<tbody>
+						{{threads}}
+					</tbody>
+				</table>
+			</section>
+		</div>
+		<div class="clear"></div>
+		<footer>
+      <p><em>Pistachio's back. UI designed by Google and adapted by @avm99963.</em></p>
+    </footer>
+	</body>
+</html>

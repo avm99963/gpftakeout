@@ -1,0 +1,55 @@
+[
+    {
+        "name": "zaininnari/html-minifier",
+        "version": "0.4.2",
+        "version_normalized": "0.4.2.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/zaininnari/html-minifier.git",
+            "reference": "5b94d85705626f9bb33b7c667bc4400088ed4ece"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/zaininnari/html-minifier/zipball/5b94d85705626f9bb33b7c667bc4400088ed4ece",
+            "reference": "5b94d85705626f9bb33b7c667bc4400088ed4ece",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.0"
+        },
+        "require-dev": {
+            "satooshi/php-coveralls": "dev-master"
+        },
+        "time": "2015-08-18T14:10:55+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "zz": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "The BSD 3-Clause License"
+        ],
+        "authors": [
+            {
+                "name": "Google inc",
+                "homepage": "http://www.chromium.org/blink",
+                "role": "Author"
+            },
+            {
+                "name": "zaininnari",
+                "homepage": "https://github.com/zaininnari/",
+                "role": "Developer"
+            }
+        ],
+        "description": "The Blink HTMLTokenizer ported to PHP.",
+        "homepage": "https://github.com/zaininnari/html-minifier",
+        "keywords": [
+            "Blink",
+            "HTML minify",
+            "php"
+        ]
+    }
+]

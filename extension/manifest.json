@@ -1,0 +1,21 @@
+{
+  "manifest_version": 2,
+  "name": "GPF takeout",
+  "short_name": "GPF takeout",
+  "description": "Extension to export an entire forum.",
+
+  "version": "0.1",
+
+  "permissions": ["activeTab", "tabs", "https://productforums.google.com/*"],
+
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
+
+  "browser_action": {
+    "default_title": "GPF takeout"
+  }
+}

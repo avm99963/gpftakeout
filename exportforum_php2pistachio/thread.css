@@ -1,0 +1,90 @@
+h2.title {
+	font-size: 14px;
+}
+
+@media (min-width: 600px) {
+	.user {
+		position: relative;
+		margin: 0;
+		padding: 0;
+		height: 0;
+	}
+
+	.message {
+		margin-left: 165px;
+	    min-height: 45px;
+	    max-width: 1200px;
+	}
+}
+
+.avatar {
+	width: 42px;
+}
+
+.userinfo {
+	max-width: Calc(115px);
+	display: inline-block;
+	vertical-align: top;
+}
+
+.username a {
+	max-width: 90px;
+	display: inline-block;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden!important;
+	vertical-align: middle;
+}
+
+.moreinfo {
+	color: gray;
+    margin-top: 2px;
+    font-weight: normal;
+    font-size: 11px;
+}
+
+.section {
+	font-weight: bold;
+    font-size: 14px;
+    background: #f0f7f9 none repeat scroll 0;
+    margin-bottom: 12px;
+    padding: 6px 10px;
+    clear: both;
+}
+
+p {
+	margin-top: 0;
+}
+
+.replies .message_container {
+    border-top: 1px solid #f0f7f9;
+    margin-top: 8px;
+    padding-top: 8px;
+    clear: both;
+}
+
+.replies .message_container:first-child {
+	border-top: 0;
+	margin-top: 0;
+}
+
+.actionlinks {
+	float: right;
+	margin: 0 10px;
+}
+
+.actionlinks a:link, .actionlinks a:visited {
+	color: #77C;
+}
+
+.message_container {
+    -webkit-transition: background-color 1s cubic-bezier(0, 0, 0.2, 1);
+}
+
+.message_container:last-child {
+	margin-bottom: 8px;
+}
+
+.message_container:target {
+    background-color: #f0f7f9;
+}
