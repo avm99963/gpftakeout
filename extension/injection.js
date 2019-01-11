@@ -2,6 +2,8 @@ console.log("ha");
 
 var timeout, json, threads = [], forum;
 
+var scrollclass = "F0XO1GC-b-F"; // CHECK!
+
 function load() {
   if (window.location.host != "productforums.google.com" && window.location.host != "groups.google.com") {
     alert("This script should be run in productforums.google.com");
@@ -9,7 +11,7 @@ function load() {
     return false;
   }
 
-  document.querySelector("div[role=\"menubar\"] > div").insertAdjacentHTML("beforeend", '<div style="cursor: pointer; font-size: 13px; display: block;" role="menuitem" id="stopBot"><a style="line-height: 24px; display: block; overflow: hidden; position: relative; white-space: nowrap; text-decoration: none; color: #333; cursor: pointer; font-size: 13px; padding-left: 16px;"><span>Stop GPF takeout</span></a></div>');
+  document.querySelector("div[role=\"menubar\"] > div").insertAdjacentHTML("beforeend", '<div style="cursor: pointer; font-size: 13px; display: block;" role="menuitem" id="stopBot"><a style="line-height: 24px; display: block; overflow: hidden; position: relative; white-space: nowrap; text-decoration: none; color: #333; cursor: pointer; font-size: 13px; padding-left: 16px;"><span>Stop GPF takeout</span></a></div><style>table[role=\"list\"] tr { display: none; } table[role=\"list\"] tr:nth-last-child(1) { display: table-row; } .'+scrollclass+' > div:nth-child(1) { padding-top: 1000px; } </style>');
   document.querySelector("#stopBot").addEventListener("click", function() {
     stopbot(true);
   });
@@ -18,7 +20,8 @@ function load() {
 }
 
 function bot() {
-  timeout = window.setInterval(scroll, 500);
+  //timeout = window.setInterval(scroll, 1000);
+  scroll();
 }
 
 function stopbot(remove) {
@@ -38,7 +41,7 @@ function jsoooon() {
 }
 
 function scroll() {
-  var scrollclass = "F0XO1GC-b-F"; // CHECK!
+  document.querySelector("."+scrollclass).scrollTop = 0;
   var scrollheight = document.querySelector("."+scrollclass).scrollHeight; // Check
   document.querySelector("."+scrollclass).scrollTop = scrollheight;
 }
