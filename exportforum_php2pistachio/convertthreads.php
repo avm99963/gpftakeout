@@ -61,6 +61,11 @@ $threads = array();
 foreach ($filestoconvert as $thread) {
   echo "Working with ".$thread."\n";
 
+  if (file_exists($destination."/".$thread)) {
+    echo "WARNING: it is a dupplicate.\n";
+    continue;
+  }
+
   $dom = file_get_dom($original."/".$thread);
 
   $title = trim($dom("h2", 0)->getPlainText());
