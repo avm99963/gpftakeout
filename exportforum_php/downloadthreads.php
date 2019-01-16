@@ -20,11 +20,12 @@ if (isset($explode[1])) {
   $topic = "topic";
 }
 
+$listfile = $folder."/threads.txt";
+$threads = fopen($listfile, 'w');
+
 /**
   * SAVE EACH THREAD
   */
-
-$threads = array();
 
 foreach ($json["threads"] as $i => $thread) {
   echo "Working with ".$thread." (".$i.")\n";
@@ -32,11 +33,11 @@ foreach ($json["threads"] as $i => $thread) {
   $filename = utf8_encode($thread).".html";
 
   if (file_exists($folder."/".$filename)) {
+    echo "Skipping file...\n";
     $dom = file_get_dom($folder."/".$filename);
+    echo "Loaded dom\n";
   } else {
     $url = "https://productforums.google.com/forum/print/".$topic."/".$json["forum"]."/".$thread;
-
-    print($url);
 
     $content = file_get_contents($url);
 
@@ -45,25 +46,33 @@ foreach ($json["threads"] as $i => $thread) {
     $dom = str_get_dom($content);
   }
 
-  $threads[] = array(
-    "id" => $thread,
-    "title" => (trim($dom("h2", 0)->getPlainText()))
-  );
+  fwrite($threads, $thread."\n".trim($dom("h2", 0)->getPlainText())."\n");
+  echo "Ok\n";
 }
+
+echo "Done.\n\nCreating index page...\n";
 
 /**
   * CREATE INDEX PAGE
   */
 
-$urls = "";
+fclose($threads);
+$threads_read = fopen($listfile, 'r');
+$index = fopen($folder."/index.html", 'w');
 
-foreach ($threads as $thread) {
-  $urls .= "<li><a href='".utf8_encode($thread["id"]).".html'>".$thread["title"]."</a></li>";
+$index_txt = '<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{{forum}}</title><style>body {font-family: Tahoma, Geneva, sans-serif; font-size: 85%; background-color: #FAFAFA;} h1 {font-size: 150%;}</style></head><body><h1>{{forum}}</h1><ul>';
+
+$index_txt = str_replace("{{forum}}", $json["forum"], $index_txt);
+
+fwrite($index, $index_txt);
+
+while (($id = fgets($threads_read)) !== false) {
+  $id = trim($id);
+  $title = trim(fgets($threads_read));
+  fwrite($index, "<li><a href='".utf8_encode($id).".html'>".$title."</a></li>");
+  echo $id."\n";
 }
 
-$index = '<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{{forum}}</title><style>body {font-family: Tahoma, Geneva, sans-serif; font-size: 85%; background-color: #FAFAFA;} h1 {font-size: 150%;}</style></head><body><h1>{{forum}}</h1><ul>{{urls}}</ul></body></html>';
+fwrite($index, '</ul></body></html>');
 
-$index = str_replace("{{forum}}", $json["forum"], $index);
-$index = str_replace("{{urls}}", $urls, $index);
-
-file_put_contents($folder."/index.html", $index);
+echo "Done\n";
