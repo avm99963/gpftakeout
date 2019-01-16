@@ -1,6 +1,4 @@
 <?php
-require_once("ganon.php");
-
 $input = file_get_contents("php://stdin");
 
 $json = json_decode($input, true);
@@ -33,20 +31,22 @@ foreach ($json["threads"] as $i => $thread) {
   $filename = utf8_encode($thread).".html";
 
   if (file_exists($folder."/".$filename)) {
-    echo "Skipping file...\n";
-    $dom = file_get_dom($folder."/".$filename);
-    echo "Loaded dom\n";
+    echo "Skipping file download...\n";
+    $content = file_get_contents($folder."/".$filename);
+    echo "Loaded content\n";
   } else {
     $url = "https://productforums.google.com/forum/print/".$topic."/".$json["forum"]."/".$thread;
 
     $content = file_get_contents($url);
 
     file_put_contents($folder."/".$filename, $content);
-
-    $dom = str_get_dom($content);
   }
 
-  fwrite($threads, $thread."\n".trim($dom("h2", 0)->getPlainText())."\n");
+  preg_match('/<h2[^<]*>([^<]+)<\/h2>/', $content, $matches);
+  if (!isset($matches[1]))
+    die("Didn't find the title");
+
+  fwrite($threads, $matches[1]."\n");
   echo "Ok\n";
 }
 
@@ -66,7 +66,7 @@ $index_txt = str_replace("{{forum}}", $json["forum"], $index_txt);
 
 fwrite($index, $index_txt);
 
-while (($id = fgets($threads_read)) !== false) {
+foreach ($json["threads"] as $id) {
   $id = trim($id);
   $title = trim(fgets($threads_read));
   fwrite($index, "<li><a href='".utf8_encode($id).".html'>".$title."</a></li>");
