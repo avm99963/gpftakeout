@@ -39,6 +39,8 @@ foreach ($json["threads"] as $i => $thread) {
 
     $content = file_get_contents($url);
 
+    if (empty($content)) die("Returned empty content.\n");
+
     file_put_contents($folder."/".$filename, $content);
   }
 
