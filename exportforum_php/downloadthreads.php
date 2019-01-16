@@ -35,14 +35,14 @@ foreach ($json["threads"] as $i => $thread) {
     $content = file_get_contents($folder."/".$filename);
     echo "Loaded content\n";
   } else {
-    $url = "https://productforums.google.com/forum/print/".$topic."/".$json["forum"]."/".$thread;
+    $url = "https://productforums.google.com/forum/print/".$topic."/".$json["forum"]."/".$thread."?hl=es";
 
     $content = file_get_contents($url);
 
     file_put_contents($folder."/".$filename, $content);
   }
 
-  preg_match('/<h2[^<]*>([^<]+)<\/h2>/', $content, $matches);
+  preg_match('/<h2[^<]*>(.+)<\/h2>/', $content, $matches);
   if (!isset($matches[1]))
     die("Didn't find the title");
 
