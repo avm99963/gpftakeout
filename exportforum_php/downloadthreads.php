@@ -39,7 +39,7 @@ foreach ($json["threads"] as $i => $thread) {
 
     $content = file_get_contents($url);
 
-    if (strpos($http_response_header, '404') !== false) {
+    if (strpos($http_response_header[0], '404') !== false) {
       echo "This thread doesn't exist anymore.";
       unset($json["threads"][i]);
       continue;
