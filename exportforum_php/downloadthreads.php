@@ -39,7 +39,12 @@ foreach ($json["threads"] as $i => $thread) {
 
     $content = file_get_contents($url);
 
-    if (empty($content)) die("Returned empty content.\n");
+    if (strpos($http_response_header, '404') !== false) {
+      echo "This thread doesn't exist anymore.";
+      unset($json["threads"][i]);
+      continue;
+    }
+    elseif ($content === false) die("There was a problem downloading the thread.\n");
 
     file_put_contents($folder."/".$filename, $content);
   }
