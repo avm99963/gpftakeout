@@ -1,13 +1,14 @@
 <?php
-require_once("ganon.php");
+require_once("simple_html_dom.php");
 
 require 'vendor/autoload.php';
 
 use zz\Html\HTMLMinify;
 
 $forum = "Google Calendar - Foro de ayuda";
-$original = "calendar-es_html";
+$original = "../exportforum_php/calendar-es_html";
 $destination = "calendar-es_pistachio";
+$pagelimit = 200;
 
 function minify($html) {
   return HTMLMinify::minify($html, array("emptyElementAddSlash" => HTMLMinify::DOCTYPE_HTML5));
@@ -59,6 +60,7 @@ $filestoconvert = array_diff($filestoconvert, array('.', '..', 'index.html'));
 $threads = array();
 
 foreach ($filestoconvert as $thread) {
+  if ($thread == "threads.txt") continue;
   echo "Working with ".$thread."\n";
 
   if (file_exists($destination."/".$thread)) {
@@ -66,24 +68,24 @@ foreach ($filestoconvert as $thread) {
     continue;
   }
 
-  $dom = file_get_dom($original."/".$thread);
+  $dom = file_get_html($original."/".$thread);
 
-  $title = trim($dom("h2", 0)->getPlainText());
+  $title = trim($dom->find("h2", 0)->innertext);
 
   $messages = array();
 
-  $trs = $dom("body > table > tr");
+  $trs = $dom->find("body > table > tr");
 
   foreach ($trs as $tr) {
-    $subject = $tr(".subject", 0);
-    $author = $tr("td.author", 0);
-    $lastPostDate = $tr("td.lastPostDate", 0);
-    $snippet = $tr("td.snippet > div", 0);
+    $subject = $tr->find(".subject", 0);
+    $author = $tr->find("td.author", 0);
+    $lastPostDate = $tr->find("td.lastPostDate", 0);
+    $snippet = $tr->find("td.snippet > div", 0);
     $messages[] = array(
-      "subject" => ($subject ? trim($subject->getPlainText()) : ""),
-      "author" => ($author ? trim($author->getPlainText()) : ""),
-      "lastPostDate" => ($lastPostDate ? trim($lastPostDate->getPlainText()) : ""),
-      "snippet" => ($snippet ? trim($snippet->html()) : ($tr("td.snippet", 0) ? trim($tr("td.snippet", 0)->html()) : ""))
+      "subject" => ($subject ? trim($subject->plaintext) : ""),
+      "author" => ($author ? trim($author->plaintext) : ""),
+      "lastPostDate" => ($lastPostDate ? trim($lastPostDate->plaintext) : ""),
+      "snippet" => ($snippet ? trim($snippet->innertext) : ($tr->find("td.snippet", 0) ? trim($tr->find("td.snippet", 0)->innertext) : ""))
     );
   }
 
@@ -141,12 +143,21 @@ $threads = array_orderby($threads, "timestamplastmodified", SORT_DESC);
   * CREATE INDEX PAGE
   */
 
-$urls = "";
+$pages = intdiv(count($threads) - 1, $pagelimit) + 1;
 
-foreach ($threads as $thread) {
-  $urls .= "<tr><td><a href=\"".$thread["thread"]."\">".$thread["title"]."</a></td><td>".$thread["published"]."<br><span class=\"userlink\">".$thread["author"]."</span></td><td>".$thread["replies"]."</td><td>".$thread["lastmodified"]."</td></tr>";
+for ($page = 1; $page <= $pages; $page++) {
+  $urls = "";
+
+  for ($i = ($page - 1)*$pagelimit; $i < min($page*$pagelimit, count($threads)); $i++) {
+    $thread =& $threads[$i];
+    $urls .= "<tr><td><a href=\"".$thread["thread"]."\">".$thread["title"]."</a></td><td>".$thread["published"]."<br><span class=\"userlink\">".$thread["author"]."</span></td><td>".$thread["replies"]."</td><td>".$thread["lastmodified"]."</td></tr>";
+  }
+
+  $pages_html = "";
+
+  for ($i = 1; $i <= $pages; $i++) {
+    $pages_html .= ($i == $page ? "<span class=\"active\">".$i."</span>" : "<a href=\"index".($i == 1 ? "" : $i).".html\">".$i."</a>");
+  }
+
+  file_put_contents($destination."/index".($page == 1 ? "" : $page).".html", minify(str_replace(["{{forum}}", "{{threads}}", "{{pages}}"], [$forum, $urls, $pages_html], $indextemplate)));
 }
-
-$index = str_replace(["{{forum}}", "{{threads}}"], [$forum, $urls], $indextemplate);
-
-file_put_contents($destination."/index.html", minify($index));

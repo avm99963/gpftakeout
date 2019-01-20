@@ -398,6 +398,7 @@ meter.level::-webkit-meter-optimum-value {
 }
 
 .pages {
+  text-align: center;
   margin: 15px 0;
 }
 
