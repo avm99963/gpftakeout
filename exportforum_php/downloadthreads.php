@@ -5,6 +5,21 @@ $json = json_decode($input, true);
 
 $folder = "./".utf8_encode($json["forum"])."_html";
 
+$cookies = ""; // Something like SID=xxxxx; HSID=xxxxx; etc.
+
+$groupsBaseUrl = "https://groups.google.com/";
+
+function request($url) {
+  global $cookies;
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $url);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  if (!empty($cookies)) curl_setopt($ch, CURLOPT_HTTPHEADER, ["Cookie: ".$cookies]);
+  $response = curl_exec($ch);
+  curl_close($ch);
+  return $response;
+}
+
 // Create folder if it doesn't exist.
 if (!file_exists($folder)) {
   mkdir($folder);
@@ -35,21 +50,21 @@ foreach ($json["threads"] as $i => $thread) {
     $content = file_get_contents($folder."/".$filename);
     echo "Loaded content\n";
   } else {
-    $url = "https://productforums.google.com/forum/print/".$topic."/".$json["forum"]."/".$thread."?hl=es";
+    $url = $groupsBaseURL."/forum/print/".$topic."/".$json["forum"]."/".$thread."?hl=es";
 
-    $content = file_get_contents($url);
+    $content = request($url);
 
-    if (strpos($http_response_header[0], '404') !== false) {
+    /*if (strpos($http_response_header[0], '404') !== false) {
       echo "This thread doesn't exist anymore.";
       unset($json["threads"][$i]);
       continue;
     }
-    elseif ($content === false) die("There was a problem downloading the thread.\n");
+    elseif ($content === false) die("There was a problem downloading the thread.\n");*/
 
     file_put_contents($folder."/".$filename, $content);
   }
 
-  preg_match('/<h2[^<]*>(.+)<\/h2>/', $content, $matches);
+  preg_match('/<h2[^<]*>(.*)<\/h2>/', $content, $matches);
   if (!isset($matches[1]))
     die("Didn't find the title");
 

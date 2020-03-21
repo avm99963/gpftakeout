@@ -407,5 +407,6 @@ meter.level::-webkit-meter-optimum-value {
 }
 
 .pages a, .pages span {
+  display: inline-block;
   padding-right: 5px;
 }

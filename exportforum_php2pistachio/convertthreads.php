@@ -6,8 +6,8 @@ require 'vendor/autoload.php';
 use zz\Html\HTMLMinify;
 
 $forum = "Google Calendar - Foro de ayuda";
-$original = "../exportforum_php/calendar-es_html";
-$destination = "calendar-es_pistachio";
+$original = "../exportforum_php/chrome-es_html";
+$destination = "chrome-es_pistachio";
 $pagelimit = 200;
 
 function minify($html) {
